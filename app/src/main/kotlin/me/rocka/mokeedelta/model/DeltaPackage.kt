@@ -12,7 +12,6 @@ data class DeltaPackage(
         val md5sum: String,
         val size: String,
         val url: String,
-        val version: String,
         val base: String,
         val target: String,
         val key: String
