@@ -9,9 +9,11 @@ import me.rocka.mokeedelta.model.FullPackage
 
 object Parser {
 
-    val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^<]+)</span></a>""")
-    val fullPkgRe = Regex("""<td><a href="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a?><br ?/><small>md5sum: ([^&]+)&nbsp;<a href="([^"]+)">([^<]+)</a></small></td>""")
+    val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
+    val fullPkgRe = Regex("""<td><a href="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a?><br ?/><small>md5sum: ([^&]+)&nbsp;<a href="([^"]+)">[^<]+</a></small></td>[^<]+<td>([^<]+)</td>""")
     val deltaPkgRe = Regex("""<tr>[^<]+<td><a href="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a><br/><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>""")
+    val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-])+-(\d+)-(\w+)""")
+    val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-])+-(\d+)-(\d+)-(\w+)""")
 
     fun parseDevices(input: String): List<Device> {
         val result = deviceRe.findAll(input)
@@ -26,6 +28,7 @@ object Parser {
         val result = fullPkgRe.findAll(input)
         val output = ArrayList<FullPackage>()
         result.forEach {
+            val versionResult = fullPkgFilenameRe.find(it.groupValues[2])
             output.add(FullPackage(
                     device = "",
                     model = "",
@@ -33,8 +36,8 @@ object Parser {
                     md5sum = it.groupValues[3],
                     deltaUrl = "https://download.mokeedev.com/${it.groupValues[4]}",
                     key = it.groupValues[1],
-                    version = "",
-                    size = "",
+                    version = versionResult?.groupValues!![3],
+                    size = it.groupValues[5],
                     url = ""
             ))
         }
@@ -45,17 +48,17 @@ object Parser {
         val result = deltaPkgRe.findAll(input)
         val output = ArrayList<DeltaPackage>()
         result.forEach {
+            val versionResult = deltaPkgFilenameRe.find(it.groupValues[2])
             output.add(DeltaPackage(
                     device = "",
                     model = "",
                     fileName = it.groupValues[2],
                     md5sum = it.groupValues[3],
                     key = it.groupValues[1],
-                    version = "",
                     size = it.groupValues[4],
                     url = "",
-                    base = "",
-                    target = ""
+                    base = versionResult?.groupValues!![3],
+                    target = versionResult.groupValues[4]
             ))
         }
         return output
