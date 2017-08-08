@@ -1,13 +1,14 @@
 package me.rocka.mokeedelta.activity
 
+import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
 import kotlinx.android.synthetic.main.activity_main.*
 import me.rocka.mokeedelta.R
+import me.rocka.mokeedelta.util.BuildProp
+import org.jetbrains.anko.alert
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,10 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
+        fab.setOnClickListener { }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -28,13 +26,18 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_settings -> true
+        R.id.action_device_info -> {
+            alert("""|DEVICE: ${Build.DEVICE}
+                     |BOARD: ${Build.BOARD}
+                     |MODEL: ${Build.MODEL}
+                     |RELEASE: ${Build.VERSION.RELEASE}
+                     |modVersion: ${BuildProp.get("ro.mk.version")}
+                     |modType: ${BuildProp.get("ro.mk.releasetype")}""".trimMargin(),
+                    getString(R.string.action_device_info)).show()
+            true
         }
+        else -> super.onOptionsItemSelected(item)
     }
 }
