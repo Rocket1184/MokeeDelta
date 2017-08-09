@@ -41,6 +41,15 @@ class ParserTest {
             <td>89</td>
             <td>2017-08-06 05:34:56</td>
         </tr>"""
+    val versionStr = "MK71.2-bacon-201708060312-NIGHTLY"
+
+    @Test
+    fun parseCurrentVersion() {
+        val current = Parser.parseCurrentVersion(versionStr)
+        assertEquals("Device equals `bacon`", "bacon", current.device)
+        assertEquals("Version equals `201708060312`", "201708060312", current.version)
+        assertEquals("Channel equals `NIGHTLY`", "NIGHTLY", current.channel.toString())
+    }
 
     @Test
     fun parseDevices() {
@@ -59,14 +68,26 @@ class ParserTest {
     fun parseFullPkg() {
         val pkgList = Parser.parseFullPkg(fullPkgHtml)
         assertNotEquals("Full package list not empty", 0, pkgList.size)
-        println(pkgList[0].toString())
+        assertEquals("Full package list should contain 1 item", 1, pkgList.size)
+        assertEquals("Device equals `bacon`", "bacon", pkgList[0].device)
+        assertEquals("Version equals `201708060312`", "201708060312", pkgList[0].version)
+        assertEquals("Channel equals `NIGHTLY`", "NIGHTLY", pkgList[0].channel.toString())
+        assertEquals("Size equals `405.13 MB`", "405.13 MB", pkgList[0].size)
+        assertEquals("Key equals ...", "97f99da25404f9865d487a123dadcfb3", pkgList[0].key)
+        assertEquals("md5sum equals ...", "ae8b83e35949e6a5af23002adccb0543", pkgList[0].md5sum)
+        assertEquals("deltaUrl equals ...", "${Parser.deltaRoot}ota.php?version=MK71.2-bacon-201708060312-NIGHTLY&owner=", pkgList[0].deltaUrl)
     }
 
     @Test
     fun parseDeltaPkg() {
         val pkgList = Parser.parseDeltaPkg(deltaPkgHtml)
         assertNotEquals("Delta package list not empty", 0, pkgList.size)
-        println(pkgList[0].toString())
+        assertEquals("Delta package list should contain 1 item", 1, pkgList.size)
+        assertEquals("Device equals `cancro`", "cancro", pkgList[0].device)
+        assertEquals("Base equals `201708050418`", "201708050418", pkgList[0].base)
+        assertEquals("Target equals `201708060418`", "201708060418", pkgList[0].target)
+        assertEquals("Size equals `26.76 MB`", "26.76 MB", pkgList[0].size)
+        assertEquals("Key equals ...", "6a2dca68f5d265054e95c0b9b079aa9c", pkgList[0].key)
+        assertEquals("md5sum equals ...", "11b82c8bf6340b5dc3f8e7e271e6d99f", pkgList[0].md5sum)
     }
-
 }
