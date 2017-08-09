@@ -7,5 +7,6 @@ enum class ReleaseChannel {
     RELEASE,
     HISTORY,
     EXPERIMENTAL,
-    NIGHTLY
+    NIGHTLY,
+    UNKNOWN
 }
