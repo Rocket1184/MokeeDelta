@@ -14,5 +14,6 @@ data class FullPackage(
         val url: String,
         val version: String,
         val deltaUrl: String,
-        val key: String
+        val key: String,
+        val channel: ReleaseChannel
 )
