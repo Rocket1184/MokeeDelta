@@ -2,4 +2,8 @@
     <string name="app_name">MokeeDelta</string>
     <string name="action_settings">Settings</string>
     <string name="action_device_info">Device Info</string>
+    <string name="desc_download_btn">Download button</string>
+    <string name="device_code_name">Device Code Name</string>
+    <string name="current_system_version">Current System Version</string>
+    <string name="available_packages">Available Packages</string>
 </resources>
