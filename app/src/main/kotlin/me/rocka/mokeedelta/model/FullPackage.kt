@@ -7,13 +7,16 @@ data class FullPackage(
         // Build.DEVICE
         val device: String,
         // Build.MODEL
-        val model: String,
+        override val model: String,
         val fileName: String,
         val md5sum: String,
-        val size: String,
+        override val size: String,
         val url: String,
         val version: String,
         val deltaUrl: String,
         val key: String,
         val channel: ReleaseChannel
-)
+) : IRomPackage {
+    override val name: String
+        get() = "$version-$channel"
+}

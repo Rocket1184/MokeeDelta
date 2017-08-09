@@ -7,12 +7,15 @@ data class DeltaPackage(
         // Build.DEVICE
         val device: String,
         // Build.MODEL
-        val model: String,
+        override val model: String,
         val fileName: String,
         val md5sum: String,
-        val size: String,
+        override val size: String,
         val url: String,
         val base: String,
         val target: String,
         val key: String
-)
+) : IRomPackage {
+    override val name: String
+        get() = target
+}
