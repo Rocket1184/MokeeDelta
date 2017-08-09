@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
@@ -26,6 +25,13 @@ android {
             java.srcDirs += 'src/main/kotlin'
         }
     }
+    dataBinding {
+        enabled = true
+    }
+}
+
+kapt {
+    generateStubs = true
 }
 
 dependencies {
@@ -40,4 +46,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
     compile "org.jetbrains.anko:anko:0.10.1"
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    kapt "com.android.databinding:compiler:$android_plugin_version"
 }
