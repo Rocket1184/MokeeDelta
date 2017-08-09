@@ -14,7 +14,7 @@ data class DeltaPackage(
         val url: String,
         val base: String,
         val target: String,
-        val key: String
+        override val key: String
 ) : IRomPackage {
     override val name: String
         get() = target

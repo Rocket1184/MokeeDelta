@@ -7,4 +7,5 @@ interface IRomPackage {
     val model: String
     val name: String
     val size: String
+    val key: String
 }
