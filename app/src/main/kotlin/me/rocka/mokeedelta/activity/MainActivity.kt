@@ -1,6 +1,8 @@
 package me.rocka.mokeedelta.activity
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -27,6 +29,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var pkgListView: RecyclerView
 
+    private val handleDownload = { e: IRomPackage ->
+        doAsync {
+            val url = Request.postKey(e.key)
+            val uri = Uri.parse(url)
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -38,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity).apply {
                 orientation = LinearLayoutManager.VERTICAL
             }
-            adapter = RomPackageAdapter(ArrayList<IRomPackage>())
+            adapter = RomPackageAdapter(ArrayList<IRomPackage>(), handleDownload)
         }
 
         fab.setOnClickListener {
@@ -53,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                                 val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
                                 tmpList.findLast { it.base == binding.currentPkg.version }
                                         ?.let { deltaList.add(it) }
-                                uiThread { pkgListView.adapter = RomPackageAdapter(deltaList) }
+                                uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
                             }
                         }
             }

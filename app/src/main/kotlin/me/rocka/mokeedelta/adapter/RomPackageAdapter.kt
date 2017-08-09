@@ -14,7 +14,8 @@ import me.rocka.mokeedelta.databinding.ItemRomPackageBinding
 import me.rocka.mokeedelta.model.IRomPackage
 
 class RomPackageAdapter(
-        val pkgList: List<IRomPackage>
+        val pkgList: List<IRomPackage>,
+        val downloadPkg: (pkg: IRomPackage) -> Any
 ) : RecyclerView.Adapter<RomPackageAdapter.Holder>() {
 
     class Holder(
@@ -34,6 +35,7 @@ class RomPackageAdapter(
 
     override fun onBindViewHolder(holder: Holder?, position: Int) {
         val pkg = pkgList[position]
+        holder?.binding?.buttonDownload?.setOnClickListener { downloadPkg(pkg) }
         holder?.binding?.apply {
             setVariable(BR.pkg, pkg)
             executePendingBindings()
