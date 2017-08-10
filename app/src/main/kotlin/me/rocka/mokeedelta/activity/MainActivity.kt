@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                                 val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
                                 tmpList.findLast { it.base == binding.currentPkg.version }
                                         ?.let { deltaList.add(it) }
+                                deltaList.sortBy { -it.target.toLong() }
                                 uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
                             }
                         }
