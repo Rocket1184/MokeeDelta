@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         fab.setOnClickListener {
             doAsync {
-                val html = Request.get(Request.deviceLink(Build.DEVICE))
+                val html = Request.get(Request.deviceLink(binding.currentPkg.device))
                 val pkgList = Parser.parseFullPkg(html!!)
                 val deltaList = ArrayList<DeltaPackage>()
                 pkgList.filter { it.version.toLong() > binding.currentPkg.version.toLong() }
