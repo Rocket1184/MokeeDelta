@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.activity_main.*
 import me.rocka.mokeedelta.R
 import me.rocka.mokeedelta.adapter.RomPackageAdapter
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var pkgListView: RecyclerView
+    private lateinit var progressBar: ProgressBar
 
     private val handleDownload = { e: IRomPackage ->
         doAsync {
@@ -38,11 +41,41 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun refreshPackages() = doAsync {
+        uiThread { setPkgListVisible(false) }
+        val html = Request.get(Request.deviceLink(binding.currentPkg.device))
+        val pkgList = Parser.parseFullPkg(html!!)
+        val deltaList = ArrayList<DeltaPackage>()
+        pkgList.filter { it.version.toLong() > binding.currentPkg.version.toLong() }
+                .forEach {
+                    doAsync {
+                        val tmpHtml = Request.get(it.deltaUrl)
+                        val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
+                        tmpList.findLast { it.base == binding.currentPkg.version }
+                                ?.let { deltaList.add(it) }
+                        deltaList.sortBy { -it.target.toLong() }
+                        uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
+                    }
+                }
+        uiThread { setPkgListVisible(true) }
+    }
+
+    fun setPkgListVisible(visible: Boolean) {
+        if(visible) {
+            pkgListView.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+        } else {
+            pkgListView.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setSupportActionBar(toolbar)
         pkgListView = find<RecyclerView>(R.id.main_package_list)
+        progressBar = find<ProgressBar>(R.id.main_progress_bar)
         binding.currentPkg = Parser.parseCurrentVersion(BuildProp.get("ro.mk.version")!!)
 
         pkgListView.apply {
@@ -52,24 +85,9 @@ class MainActivity : AppCompatActivity() {
             adapter = RomPackageAdapter(ArrayList<IRomPackage>(), handleDownload)
         }
 
-        fab.setOnClickListener {
-            doAsync {
-                val html = Request.get(Request.deviceLink(binding.currentPkg.device))
-                val pkgList = Parser.parseFullPkg(html!!)
-                val deltaList = ArrayList<DeltaPackage>()
-                pkgList.filter { it.version.toLong() > binding.currentPkg.version.toLong() }
-                        .forEach {
-                            doAsync {
-                                val tmpHtml = Request.get(it.deltaUrl)
-                                val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
-                                tmpList.findLast { it.base == binding.currentPkg.version }
-                                        ?.let { deltaList.add(it) }
-                                deltaList.sortBy { -it.target.toLong() }
-                                uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
-                            }
-                        }
-            }
-        }
+        refreshPackages()
+
+        fab.setOnClickListener { refreshPackages() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
