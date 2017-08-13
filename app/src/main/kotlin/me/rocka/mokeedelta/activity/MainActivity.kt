@@ -33,12 +33,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
 
     private val handleDownload = { e: IRomPackage ->
-        doAsync {
-            val url = Request.postKey(e.key)
-            val uri = Uri.parse(url)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            startActivity(intent)
-        }
+        val url = Request.postKey(e.key)
+        val uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
     }
 
     fun refreshPackages() = doAsync {

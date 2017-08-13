@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="download_btn_width">40dp</dimen>
+    <dimen name="download_btn_margin">8dp</dimen>
 </resources>

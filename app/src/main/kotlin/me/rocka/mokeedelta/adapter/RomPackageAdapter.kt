@@ -12,6 +12,8 @@ import me.rocka.mokeedelta.BR
 import me.rocka.mokeedelta.R
 import me.rocka.mokeedelta.databinding.ItemRomPackageBinding
 import me.rocka.mokeedelta.model.IRomPackage
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class RomPackageAdapter(
         val pkgList: List<IRomPackage>,
@@ -35,8 +37,20 @@ class RomPackageAdapter(
 
     override fun onBindViewHolder(holder: Holder?, position: Int) {
         val pkg = pkgList[position]
-        holder?.binding?.buttonDownload?.setOnClickListener { downloadPkg(pkg) }
         holder?.binding?.apply {
+            buttonDownload?.setOnClickListener {
+                doAsync {
+                    uiThread {
+                        buttonDownload.animate().alpha(0f)
+                        progressCircleDownload.animate().alpha(1f)
+                    }
+                    downloadPkg(pkg)
+                    uiThread {
+                        buttonDownload.animate().alpha(1f)
+                        progressCircleDownload.animate().alpha(0f)
+                    }
+                }
+            }
             setVariable(BR.pkg, pkg)
             executePendingBindings()
         }
