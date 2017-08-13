@@ -48,20 +48,18 @@ class MainActivity : AppCompatActivity() {
         val deltaList = ArrayList<DeltaPackage>()
         pkgList.filter { it.version.toLong() > binding.currentPkg.version.toLong() }
                 .forEach {
-                    doAsync {
-                        val tmpHtml = Request.get(it.deltaUrl)
-                        val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
-                        tmpList.findLast { it.base == binding.currentPkg.version }
-                                ?.let { deltaList.add(it) }
-                        deltaList.sortBy { -it.target.toLong() }
-                        uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
-                    }
+                    val tmpHtml = Request.get(it.deltaUrl)
+                    val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
+                    tmpList.findLast { it.base == binding.currentPkg.version }
+                            ?.let { deltaList.add(it) }
+                    deltaList.sortBy { -it.target.toLong() }
+                    uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
                 }
         uiThread { setPkgListVisible(true) }
     }
 
     fun setPkgListVisible(visible: Boolean) {
-        if(visible) {
+        if (visible) {
             pkgListView.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
         } else {
