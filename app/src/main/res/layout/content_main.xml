@@ -70,7 +70,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
@@ -117,13 +116,15 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="0dp"
-            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_available_packages" />
+            app:layout_constraintTop_toBottomOf="@+id/text_available_packages"
+            tools:listitem="@layout/item_rom_package" />
 
         <ProgressBar
             android:id="@+id/main_progress_bar"
