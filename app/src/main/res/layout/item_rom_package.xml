@@ -38,19 +38,21 @@
         <ProgressBar
             android:id="@+id/progress_circle_download"
             style="?android:attr/progressBarStyle"
-            android:layout_width="@dimen/download_btn_width"
-            android:layout_height="@dimen/download_btn_width"
-            android:layout_marginEnd="@dimen/download_btn_margin"
+            android:layout_width="@dimen/download_idc_width"
+            android:layout_height="@dimen/download_idc_width"
+            android:layout_marginBottom="@dimen/download_btn_margin"
+            android:layout_marginEnd="13dp"
             android:layout_marginTop="@dimen/download_btn_margin"
             android:alpha="0.0"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/stat_sys_download" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/button_download"
             android:layout_width="@dimen/download_btn_width"
             android:layout_height="@dimen/download_btn_width"
+            android:layout_marginBottom="@dimen/download_btn_margin"
             android:layout_marginEnd="@dimen/download_btn_margin"
             android:layout_marginTop="@dimen/download_btn_margin"
             android:background="@android:color/transparent"
@@ -58,10 +60,10 @@
             android:contentDescription="@string/desc_download_btn"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:padding="8dp"
             android:tint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/stat_sys_download" />
+            app:srcCompat="@drawable/ic_file_download" />
     </android.support.constraint.ConstraintLayout>
 </layout>
