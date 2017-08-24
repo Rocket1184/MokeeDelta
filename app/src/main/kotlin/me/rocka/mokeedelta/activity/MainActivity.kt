@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun refreshPackages() = doAsync {
+    private fun refreshPackages() = doAsync {
         uiThread { setPkgListVisible(false) }
         val html = Request.get(Request.deviceLink(binding.currentPkg.device))
         val pkgList = Parser.parseFullPkg(html!!)
@@ -49,13 +49,13 @@ class MainActivity : AppCompatActivity() {
                     val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
                     tmpList.findLast { it.base == binding.currentPkg.version }
                             ?.let { deltaList.add(it) }
-                    deltaList.sortBy { -it.target.toLong() }
+                    deltaList.sortByDescending { it.target.toLong() }
                     uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
                 }
         uiThread { setPkgListVisible(true) }
     }
 
-    fun setPkgListVisible(visible: Boolean) {
+    private fun setPkgListVisible(visible: Boolean) {
         if (visible) {
             pkgListView.visibility = View.VISIBLE
             progressBar.visibility = View.GONE
@@ -68,16 +68,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.currentPkg = Parser.parseCurrentVersion(BuildProp.get("ro.mk.version")!!)
         setSupportActionBar(toolbar)
         pkgListView = find<RecyclerView>(R.id.main_package_list)
         progressBar = find<ProgressBar>(R.id.main_progress_bar)
-        binding.currentPkg = Parser.parseCurrentVersion(BuildProp.get("ro.mk.version")!!)
-
-        pkgListView.adapter = RomPackageAdapter(ArrayList<IRomPackage>(), handleDownload)
-
-        refreshPackages()
-
         fab.setOnClickListener { refreshPackages() }
+        refreshPackages()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
