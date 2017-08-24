@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
@@ -74,12 +73,7 @@ class MainActivity : AppCompatActivity() {
         progressBar = find<ProgressBar>(R.id.main_progress_bar)
         binding.currentPkg = Parser.parseCurrentVersion(BuildProp.get("ro.mk.version")!!)
 
-        pkgListView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity).apply {
-                orientation = LinearLayoutManager.VERTICAL
-            }
-            adapter = RomPackageAdapter(ArrayList<IRomPackage>(), handleDownload)
-        }
+        pkgListView.adapter = RomPackageAdapter(ArrayList<IRomPackage>(), handleDownload)
 
         refreshPackages()
 
