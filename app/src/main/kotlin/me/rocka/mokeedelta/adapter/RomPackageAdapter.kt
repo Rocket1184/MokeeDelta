@@ -16,8 +16,8 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 class RomPackageAdapter(
-        val pkgList: List<IRomPackage>,
-        val downloadPkg: (pkg: IRomPackage) -> Any
+        private val pkgList: List<IRomPackage>,
+        private val downloadPkg: (pkg: IRomPackage) -> Any
 ) : RecyclerView.Adapter<RomPackageAdapter.Holder>() {
 
     class Holder(
