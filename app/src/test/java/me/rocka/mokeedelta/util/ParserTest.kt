@@ -28,7 +28,7 @@ class ParserTest {
         <tr>
             <td><a href="/?device=bacon">bacon</a><br/><small class="md5">OnePlus 1</small></td>
             <td>每夜版</td>
-            <td><a href="javascript:downloadPost('download.php', {key:'97f99da25404f9865d487a123dadcfb3'})" id="tdurl">MK71.2-bacon-201708060312-NIGHTLY.zip</a><br/><small>md5sum: ae8b83e35949e6a5af23002adccb0543&nbsp;<a href="ota.php?version=MK71.2-bacon-201708060312-NIGHTLY&owner=">增量更新</a></small></td>
+            <td><a href="javascript:void(0);" onclick="javascript:downloadPost('download.php', {key:'97f99da25404f9865d487a123dadcfb3'})" id="tdurl">MK71.2-bacon-201708060312-NIGHTLY.zip</a><br/><small>md5sum: ae8b83e35949e6a5af23002adccb0543&nbsp;<a href="ota.php?version=MK71.2-bacon-201708060312-NIGHTLY&owner=">增量更新</a></small></td>
             <td>405.13 MB</td>
             <td>140</td>
             <td>2017-08-06 04:31:36</td>
@@ -36,12 +36,17 @@ class ParserTest {
 """
     val deltaPkgHtml = """
         <tr>
-            <td><a href="javascript:downloadPost('download.php', {key:'6a2dca68f5d265054e95c0b9b079aa9c'})" id="tdurl">OTA-MK71.2-cancro-201708050418-201708060418-NIGHTLY.zip</a><br/><small>md5sum: 11b82c8bf6340b5dc3f8e7e271e6d99f</small></td>
+            <td><a href="javascript:void(0);" onclick="javascript:downloadPost('download.php', {key:'6a2dca68f5d265054e95c0b9b079aa9c'})" id="tdurl">OTA-MK71.2-cancro-201708050418-201708060418-NIGHTLY.zip</a><br/><small>md5sum: 11b82c8bf6340b5dc3f8e7e271e6d99f</small></td>
             <td>26.76 MB</td>
             <td>89</td>
             <td>2017-08-06 05:34:56</td>
         </tr>"""
     val versionStr = "MK71.2-bacon-201708060312-NIGHTLY"
+    val realKeyHtml = """
+<script language=javascript>var wait="60"
+var secs=0;for(var i=1;i<=wait;i++){setTimeout("sTimer("+i+")",i*1000);}function genLink(){if(document.readyState=="complete"&&window.adVerified==true){${'$'}.post("gen-link.php",{url:"fxung1"},function(data,status){${'$'}('#alert-success-enabled').html('<a href="'+data+'" class="alert-link">点击下载 MK71.2-bacon-201711260154-NIGHTLY.zip</a>');});}else{${'$'}('#alert-danger-enabled').show();${'$'}('#alert-success-enabled').hide();setTimeout("genLink()",1000);}}function sTimer(num){if(num!=wait){secs=wait-num;${'$'}('#Timer').html(secs);}else{genLink();}}window.setTimeout(function(){if(adsbygoogle instanceof Array){${'$'}('#alert-danger-enabled').show();${'$'}('#alert-success-enabled').hide();}},5000);window.setTimeout(function(){function Script(callback){var js=document.createElement("script");this.js=js;js.setAttribute("type",'text/javascript');var head=document.getElementsByTagName('head')[0];head.appendChild(js);if(navigator.appName.toLowerCase().indexOf('netscape')==-1){js.onreadystatechange=function(){console.log('test',js.status);if(js.readyState=='complete'){callback(js);}}}else{js.onload=function(){callback(js);}}}Script.prototype.get=function(url){this.js.src=url;}
+function script_onload(script){window.adVerified=true;}var load_js=new Script(script_onload);load_js.get('https://adservice.google.com/adsid/integrator.js?domain=download.mokeedev.com');},10000);</script>
+    """
 
     @Test
     fun parseCurrentVersion() {
@@ -89,5 +94,12 @@ class ParserTest {
         assertEquals("Size equals `26.76 MB`", "26.76 MB", pkgList[0].size)
         assertEquals("Key equals ...", "6a2dca68f5d265054e95c0b9b079aa9c", pkgList[0].key)
         assertEquals("md5sum equals ...", "11b82c8bf6340b5dc3f8e7e271e6d99f", pkgList[0].md5sum)
+    }
+
+    @Test
+    fun parseRealKey() {
+        val realKey = Parser.parseRealKey(realKeyHtml)
+        assertNotNull("Real key (url) not null", realKey)
+        assertEquals("Real key (url) equals `fxung1`", "fxung1", realKey)
     }
 }
