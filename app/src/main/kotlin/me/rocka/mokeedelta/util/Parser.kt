@@ -11,11 +11,12 @@ import me.rocka.mokeedelta.model.ReleaseChannel
 object Parser {
 
     val deltaRoot = "https://download.mokeedev.com/"
-    val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
-    val fullPkgRe = Regex("""<td><a href="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a?><br ?/><small>md5sum: ([^&]+)&nbsp;<a href="([^"]+)">[^<]+</a></small></td>[^<]+<td>([^<]+)</td>""")
-    val deltaPkgRe = Regex("""<tr>[^<]+<td><a href="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a><br/><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>""")
-    val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-]+)-(\d+)-(\w+)""")
-    val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-]+)-(\d+)-(\d+)-(\w+)""")
+    private val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
+    private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a?><br ?/><small>md5sum: ([^&]+)&nbsp;<a href="([^"]+)">[^<]+</a></small></td>[^<]+<td>([^<]+)</td>""")
+    private val deltaPkgRe = Regex("""<tr>[^<]+<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a><br/><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>""")
+    private val realKeyRe = Regex("""\$\.post\("gen-link.php",\{url:"(\w+)"}""")
+    private val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-]+)-(\d+)-(\w+)""")
+    private val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-]+)-(\d+)-(\d+)-(\w+)""")
 
     fun parseDevices(input: String): List<Device> {
         val result = deviceRe.findAll(input)
@@ -24,6 +25,11 @@ object Parser {
             output.add(Device(it.groupValues[1], it.groupValues[2]))
         }
         return output
+    }
+
+    fun parseRealKey(input: String): String? {
+        val result = realKeyRe.findAll(input)
+        return result.firstOrNull()?.groupValues?.get(1)
     }
 
     fun parseCurrentVersion(input: String): FullPackage {
