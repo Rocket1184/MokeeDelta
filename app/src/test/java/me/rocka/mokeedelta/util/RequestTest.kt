@@ -19,10 +19,21 @@ class RequestTest {
     @Test
     fun postKey() {
         // key for `MK51.1-bacon-160420-HISTORY.zip`
-        val testKey = "6dc44557d61bab352a3c052b8a134239"
+        val testKey = "519396dde5e71951a11b49862b3c4116"
         val res = Request.postKey(testKey)
-        println(res)
-        assertNotNull("Get link not null", res)
-        assertTrue("Get link is http format", res!!.startsWith("http://rom.mk/"))
+        assertNotNull("Get link result not null", res)
+        assertTrue("Get link result is HTML document", res!!.startsWith("<!DOCTYPE html>"))
+    }
+
+    @Test
+    fun postUrl() {
+        // Must get cookie before postUrl
+        postKey()
+        // url for `MK51.1-bacon-160420-HISTORY.zip`
+        val testUrl = "gt5swn"
+        val res = Request.postUrl(testUrl)
+        assertNotNull("Post key result not null", res)
+        assertTrue("Post key result is download link", res!!.startsWith("http://rom.mk/f/"))
+        assertTrue("Post key result is reachable link", res.length > "http://rom.mk/f/".length)
     }
 }
