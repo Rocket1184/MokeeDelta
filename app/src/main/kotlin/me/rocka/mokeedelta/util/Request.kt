@@ -12,8 +12,12 @@ import java.net.SocketTimeoutException
 object Request {
 
     val baseURL = "https://download.mokeedev.com"
-    val linkPHP = "$baseURL/link.php"
-    val client = OkHttpClient()
+    val downloadPHP = "$baseURL/download.php"
+    val genLinkPHP = "$baseURL/gen-link.php"
+    private val client = OkHttpClient()
+            .newBuilder()
+            .cookieJar(SimpleCookieJar())
+            .build()
 
     fun deviceLink(device: String): String = "$baseURL/?device=$device"
 
@@ -24,7 +28,7 @@ object Request {
                 .build()
         try {
             val res = client.newCall(req).execute()
-            return res.body().string()
+            return res.body()!!.string()
         } catch (e: SocketTimeoutException) {
 
         } catch (e: IOException) {
@@ -39,12 +43,32 @@ object Request {
                 .addFormDataPart("key", key)
                 .build()
         val req = Request.Builder()
-                .url(linkPHP)
+                .url(downloadPHP)
                 .post(postBody)
                 .build()
         try {
             val res = client.newCall(req).execute()
-            return res.body().string()
+            return res.body()!!.string()
+        } catch (e: SocketTimeoutException) {
+
+        } catch (e: IOException) {
+
+        }
+        return null
+    }
+
+    fun postUrl(url: String): String? {
+        val postBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("url", url)
+                .build()
+        val req = Request.Builder()
+                .url(genLinkPHP)
+                .post(postBody)
+                .build()
+        try {
+            val res = client.newCall(req).execute()
+            return res.body()!!.string()
         } catch (e: SocketTimeoutException) {
 
         } catch (e: IOException) {
