@@ -32,7 +32,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
 
     private val handleDownload = { e: IRomPackage ->
-        val url = Request.postKey(e.key)
+        val downloadPageHtml = Request.postKey(e.key)
+        val realKey = Parser.parseRealKey(downloadPageHtml ?: "")
+        val url = Request.postUrl(realKey ?: "")
         val uri = Uri.parse(url)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
