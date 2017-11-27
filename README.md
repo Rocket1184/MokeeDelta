@@ -8,20 +8,26 @@ Don't wait do download Mokee delta (or OTA) packages!
 
 ## Feature
 
- - Download delta (or OTA) within one click
+- Download delta (or OTA) within one click
 
 ## Latest Release
 
- [0.3.0 - UI tweaks](https://github.com/Rocket1184/MokeeDelta/releases/tag/0.3.0)
+ [0.3.1 Hotfix](https://github.com/Rocket1184/MokeeDelta/releases/tag/0.3.1)
 
 ### ChangeLog
+
+#### 0.3.1
+
+- fix delta package fetching issues due to Mokee website changes
+
+#### 0.3.0
 
 - use CardView for available packages
 - increase download button padding
 
 ## TODO
 
- - [ ] Download full packages
- - [ ] Download packages for other devices
- - [ ] Notify when packages available
- - [ ] Option to flash package after download
+- [ ] Download full packages
+- [ ] Download packages for other devices
+- [ ] Notify when packages available
+- [ ] Option to flash package after download
