@@ -14,7 +14,7 @@ object Parser {
     private val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
     private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a?><br ?/><small>md5sum: ([^&]+)&nbsp;<a href="javascript:void\(0\);" onclick="location.href='([^"]+)'">[^<]+</a></small></td>[^<]+<td>([^<]+)</td>""")
     private val deltaPkgRe = Regex("""<tr>[^<]+<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a><br/><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>""")
-    private val realKeyRe = Regex("""\$\.post\("gen-link.php",\{url:"([^"]+)""")
+    private val realKeyRe = Regex(""""?url"?: *"([^"]+)""")
     private val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-]+)-(\d+)-(\w+)""")
     private val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-]+)-(\d+)-(\d+)-(\w+)""")
 

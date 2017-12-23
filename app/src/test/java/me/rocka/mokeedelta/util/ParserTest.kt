@@ -8,7 +8,7 @@ import org.junit.Test
 
 class ParserTest {
 
-    val deviceHtml = """
+    private val deviceHtml = """
         <li id="device_bacon">
             <a href="javascript:void(0)" onclick="navigate_device('bacon');"><span>1 (bacon)</span></a>
         </li>
@@ -24,7 +24,7 @@ class ParserTest {
         <li id="device_tocino">
             <a href="javascript:void(0)" onclick="navigate_device('tocino');"><span>2 (tocino)</span></a>
         </li>"""
-    val fullPkgHtml = """
+    private val fullPkgHtml = """
         <tr>
           <td><a href="/?device=bacon">bacon</a><br/><small class="md5">OnePlus 1</small></td>
           <td>正式版</td>
@@ -33,18 +33,29 @@ class ParserTest {
           <td>4059</td>
           <td>2017-04-13 19:49:46</td>
         </tr>"""
-    val deltaPkgHtml = """
+    private val deltaPkgHtml = """
         <tr>
           <td><a href="javascript:void(0);" onclick="javascript:downloadPost('download.php', {key:'9ce9bc3d0e11364a371df9979a03e667'})" id="tdurl">OTA-MK71.2-cancro-201711210256-201711220341-NIGHTLY.zip</a><br/><small>md5sum: 3a56cbbb706616026ef15614aa430c2d</small></td>
           <td>12.8 MB</td>
           <td>16</td>
           <td>2017-11-23 07:14:01</td>
         </tr>"""
-    val versionStr = "MK71.2-bacon-201708060312-NIGHTLY"
-    val realKeyHtml = """
-<script language=javascript>var wait="60"
-var secs=0;for(var i=1;i<=wait;i++){setTimeout("sTimer("+i+")",i*1000);}function genLink(){if(document.readyState=="complete"&&window.adVerified==true){${'$'}.post("gen-link.php",{url:"fxung1"},function(data,status){${'$'}('#alert-success-enabled').html('<a href="'+data+'" class="alert-link">点击下载 MK71.2-bacon-201711260154-NIGHTLY.zip</a>');});}else{${'$'}('#alert-danger-enabled').show();${'$'}('#alert-success-enabled').hide();setTimeout("genLink()",1000);}}function sTimer(num){if(num!=wait){secs=wait-num;${'$'}('#Timer').html(secs);}else{genLink();}}window.setTimeout(function(){if(adsbygoogle instanceof Array){${'$'}('#alert-danger-enabled').show();${'$'}('#alert-success-enabled').hide();}},5000);window.setTimeout(function(){function Script(callback){var js=document.createElement("script");this.js=js;js.setAttribute("type",'text/javascript');var head=document.getElementsByTagName('head')[0];head.appendChild(js);if(navigator.appName.toLowerCase().indexOf('netscape')==-1){js.onreadystatechange=function(){console.log('test',js.status);if(js.readyState=='complete'){callback(js);}}}else{js.onload=function(){callback(js);}}}Script.prototype.get=function(url){this.js.src=url;}
-function script_onload(script){window.adVerified=true;}var load_js=new Script(script_onload);load_js.get('https://adservice.google.com/adsid/integrator.js?domain=download.mokeedev.com');},10000);</script>"""
+    private val versionStr = "MK71.2-bacon-201708060312-NIGHTLY"
+    private val realKeyHtml = """function genLink() {
+                  if (document.readyState == "complete" && window.adVerified == true) {
+                      ${'$'}.post("gen-link.php",
+                      {
+                          url:"m5tn2i"
+                      },
+                      function(data, status) {
+                          ${'$'}('#alert-success-enabled').html('<a href="' + data + '" class="alert-link">点击下载 OTA-MK71.2-bacon-201712220041-201712230040-NIGHTLY.zip</a>');
+                      });
+                  } else {
+                      ${'$'}('#alert-danger-enabled').show();
+                      ${'$'}('#alert-success-enabled').hide();
+                      setTimeout("genLink()", 1000);
+                  }
+              }"""
 
     @Test
     fun parseCurrentVersion() {
@@ -98,6 +109,6 @@ function script_onload(script){window.adVerified=true;}var load_js=new Script(sc
     fun parseRealKey() {
         val realKey = Parser.parseRealKey(realKeyHtml)
         assertNotNull("Real key (url) not null", realKey)
-        assertEquals("Real key (url) equals `fxung1`", "fxung1", realKey)
+        assertEquals("Real key (url) equals `m5tn2i`", "m5tn2i", realKey)
     }
 }
