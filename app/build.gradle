@@ -10,8 +10,8 @@ android {
         applicationId "me.rocka.mokeedelta"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 3
-        versionName "0.3.1"
+        versionCode 4
+        versionName "0.3.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
