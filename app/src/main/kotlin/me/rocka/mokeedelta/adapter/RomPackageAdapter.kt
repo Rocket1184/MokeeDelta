@@ -32,13 +32,13 @@ class RomPackageAdapter(
                 parent,
                 false
         )
-        return Holder(binding.root, binding)
+        return Holder(binding!!.root, binding)
     }
 
     override fun onBindViewHolder(holder: Holder?, position: Int) {
         val pkg = pkgList[position]
         holder?.binding?.apply {
-            buttonDownload?.setOnClickListener {
+            buttonDownload.setOnClickListener {
                 doAsync {
                     uiThread {
                         buttonDownload.animate().alpha(0f)

@@ -42,14 +42,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshPackages() = doAsync {
         uiThread { setPkgListVisible(false) }
-        val html = Request.get(Request.deviceLink(binding.currentPkg.device))
+        val html = Request.get(Request.deviceLink(binding.currentPkg!!.device))
         val pkgList = Parser.parseFullPkg(html!!)
         val deltaList = ArrayList<DeltaPackage>()
-        pkgList.filter { it.version.toLong() > binding.currentPkg.version.toLong() }
+        pkgList.filter { it.version.toLong() > binding.currentPkg!!.version.toLong() }
                 .forEach {
                     val tmpHtml = Request.get(it.deltaUrl)
                     val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
-                    tmpList.findLast { it.base == binding.currentPkg.version }
+                    tmpList.findLast { it.base == binding.currentPkg!!.version }
                             ?.let { deltaList.add(it) }
                     deltaList.sortByDescending { it.target.toLong() }
                     uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)!!
         binding.currentPkg = Parser.parseCurrentVersion(BuildProp.get("ro.mk.version")!!)
         setSupportActionBar(toolbar)
         pkgListView = find<RecyclerView>(R.id.main_package_list)
