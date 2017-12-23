@@ -12,9 +12,13 @@ Don't wait do download Mokee delta (or OTA) packages!
 
 ## Latest Release
 
- [0.3.1 Hotfix](https://github.com/Rocket1184/MokeeDelta/releases/tag/0.3.1)
+ [0.3.2 Hotfix-2](https://github.com/Rocket1184/MokeeDelta/releases/tag/0.3.2)
 
 ### ChangeLog
+
+#### 0.3.2
+
+- fix download URL fetching issues due to Mokee website changes
 
 #### 0.3.1
 
