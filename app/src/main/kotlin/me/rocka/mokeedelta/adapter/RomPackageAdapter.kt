@@ -25,9 +25,9 @@ class RomPackageAdapter(
             val binding: ItemRomPackageBinding
     ) : RecyclerView.ViewHolder(v)
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): Holder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding = DataBindingUtil.inflate<ItemRomPackageBinding>(
-                LayoutInflater.from(parent!!.context),
+                LayoutInflater.from(parent.context),
                 R.layout.item_rom_package,
                 parent,
                 false
@@ -35,9 +35,9 @@ class RomPackageAdapter(
         return Holder(binding!!.root, binding)
     }
 
-    override fun onBindViewHolder(holder: Holder?, position: Int) {
+    override fun onBindViewHolder(holder: Holder, position: Int) {
         val pkg = pkgList[position]
-        holder?.binding?.apply {
+        holder.binding.apply {
             buttonDownload.setOnClickListener {
                 doAsync {
                     uiThread {

@@ -10,7 +10,7 @@ import okhttp3.HttpUrl
 
 class SimpleCookieJar : CookieJar {
 
-    private var cookies: List<Cookie> = ArrayList<Cookie>()
+    private var cookies: List<Cookie> = ArrayList()
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         Log.d("Cookie", "Saving cookie $cookies")
