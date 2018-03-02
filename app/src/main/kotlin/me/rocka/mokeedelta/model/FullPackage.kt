@@ -15,7 +15,8 @@ data class FullPackage(
         val version: String,
         val deltaUrl: String,
         override val key: String,
-        val channel: ReleaseChannel
+        val channel: ReleaseChannel,
+        override val date: String
 ) : IRomPackage {
     override val name: String
         get() = "$version-$channel"
