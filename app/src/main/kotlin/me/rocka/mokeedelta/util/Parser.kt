@@ -40,7 +40,6 @@ object Parser {
                 key = "",
                 version = result?.groupValues?.get(3) ?: "",
                 size = "",
-                url = "",
                 channel = ReleaseChannel.valueOf(result?.groupValues?.get(4)
                         ?: ReleaseChannel.UNKNOWN.toString()),
                 owner = "",
@@ -63,7 +62,6 @@ object Parser {
                     key = it.groupValues[1],
                     version = versionResult.groupValues[3],
                     size = it.groupValues[7],
-                    url = "",
                     channel = ReleaseChannel.valueOf(versionResult.groupValues[4]),
                     type = it.groupValues[3],
                     owner = it.groupValues[4],
@@ -85,10 +83,10 @@ object Parser {
                     md5sum = it.groupValues[5],
                     key = it.groupValues[1],
                     size = it.groupValues[6],
-                    url = "",
                     base = versionResult.groupValues[3],
                     target = versionResult.groupValues[4],
                     type = it.groupValues[3],
+                    owner = "",
                     date = it.groupValues[7]
             ))
         }
