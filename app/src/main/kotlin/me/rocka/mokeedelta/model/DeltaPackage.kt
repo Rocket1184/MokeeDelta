@@ -15,6 +15,7 @@ data class DeltaPackage(
         val base: String,
         val target: String,
         override val key: String,
+        override val type: String,
         override val date: String
 ) : IRomPackage {
     override val name: String

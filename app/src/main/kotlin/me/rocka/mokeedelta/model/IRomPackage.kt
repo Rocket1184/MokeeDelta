@@ -8,5 +8,6 @@ interface IRomPackage {
     val name: String
     val size: String
     val key: String
+    val type: String
     val date: String
 }
