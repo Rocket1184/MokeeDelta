@@ -3,6 +3,7 @@
 
 package me.rocka.mokeedelta.util
 
+import me.rocka.mokeedelta.model.PostFilePayload
 import me.rocka.mokeedelta.model.PostOtaPayload
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -39,10 +40,13 @@ object Request {
         return null
     }
 
-    fun postFile(key: String): String? {
+    fun postFile(params: PostFilePayload): String? {
         val postBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("key", key)
+                .addFormDataPart("key", params.key)
+                .addFormDataPart("device", params.device)
+                .addFormDataPart("type", params.type)
+                .addFormDataPart("owner", params.owner)
                 .build()
         val req = Request.Builder()
                 .url(fileURL)

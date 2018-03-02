@@ -1,5 +1,6 @@
 package me.rocka.mokeedelta.util
 
+import me.rocka.mokeedelta.model.PostFilePayload
 import me.rocka.mokeedelta.model.PostOtaPayload
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -21,11 +22,18 @@ class RequestTest {
     @Test
     fun postFile() {
         // key for `MK51.1-bacon-160420-HISTORY.zip`
-        val testKey = "519396dde5e71951a11b49862b3c4116"
-        val res = Request.postFile(testKey)
+        // <td><a href="javascript:void(0);" onclick="javascript:downloadPost('/file.php', {key:'d18c913d0a26c2abaef111b2cdbf5289', device:'bacon', type:'history', owner:''})" id="tdurl">MK51.1-bacon-160420-HISTORY.zip</a><br/><small>md5sum: 9a51de8041bccccdfb7f7af61f6024dd</small></td>
+        val payload = PostFilePayload(
+                key = "d18c913d0a26c2abaef111b2cdbf5289",
+                device = "bacon",
+                type = "history",
+                owner = ""
+        )
+        val res = Request.postFile(payload)
         assertNotNull("Get link result not null", res)
         assertTrue("Get link result is HTML document", res!!.startsWith("<!DOCTYPE html>"))
         assertTrue("There is a key in HTML Doc", Parser.parseRealKey(res)!!.isNotEmpty())
+        assertNotNull("There are delta params in HTML Doc", Parser.parsePostPayload(res))
     }
 
     @Test
