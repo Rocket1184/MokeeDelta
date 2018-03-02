@@ -2,8 +2,8 @@
 
 buildscript {
     ext.android_plugin_version = '3.0.1'
-    ext.support_lib_version = '27.0.2'
-    ext.kotlin_version = '1.2.10'
+    ext.support_lib_version = '27.1.0'
+    ext.kotlin_version = '1.2.30'
     repositories {
         google()
         jcenter()
