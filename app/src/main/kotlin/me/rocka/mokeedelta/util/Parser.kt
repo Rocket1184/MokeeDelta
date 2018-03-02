@@ -8,9 +8,9 @@ import me.rocka.mokeedelta.model.*
 object Parser {
 
     private val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
-    private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file.php', ?\{key:'([^']+)', ?device:'([^']+)', ?type:'([^']+)', ?owner:'([^']+)?'}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^&]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
-    private val deltaPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file.php', ?\{key:'([^']+)', ?device:'([^']+)', ?type:'([^']+)'}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^&]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
-    private val deltaPayloadRe = Regex("""<a href="javascript:void\(0\); "onclick="javascript:downloadPost\('/ota.php', ?\{version:'([^']+)', owner:'([^']+)', device:'([^']+)', type:'([^']+)'}\)">[^<]+</a></span>""")
+    private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file\.php', ?\{key:'([^']+)', ?device:'([^']+)?', ?type:'([^']+)?', ?owner:'([^']+)?'\}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
+    private val deltaPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file\.php', ?\{key:'([^']+)', ?device:'([^']+)?', ?type:'([^']+)?'\}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
+    private val deltaPayloadRe = Regex("""<a href="javascript:void\(0\); "onclick="javascript:downloadPost\('/ota\.php', ?\{version:'([^']+)', owner:'([^']+)?', device:'([^']+)?', type:'([^']+)?'\}\)">[^<]+</a></span>""")
     private val realKeyRe = Regex(""""?url"?: *"([^"]+)""")
     private val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-]+)-(\d+)-(\w+)""")
     private val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-]+)-(\d+)-(\d+)-(\w+)""")
@@ -43,6 +43,8 @@ object Parser {
                 url = "",
                 channel = ReleaseChannel.valueOf(result?.groupValues?.get(4)
                         ?: ReleaseChannel.UNKNOWN.toString()),
+                owner = "",
+                type = "",
                 date = ""
         )
     }
@@ -51,9 +53,9 @@ object Parser {
         val result = fullPkgRe.findAll(input)
         val output = ArrayList<FullPackage>()
         result.forEach {
-            val versionResult = fullPkgFilenameRe.find(it.groupValues[5])
+            val versionResult = fullPkgFilenameRe.find(it.groupValues[5])!!
             output.add(FullPackage(
-                    device = versionResult!!.groupValues[2],
+                    device = it.groupValues[2],
                     model = "",
                     fileName = it.groupValues[5],
                     md5sum = it.groupValues[6],
@@ -63,6 +65,8 @@ object Parser {
                     size = it.groupValues[7],
                     url = "",
                     channel = ReleaseChannel.valueOf(versionResult.groupValues[4]),
+                    type = it.groupValues[3],
+                    owner = it.groupValues[4],
                     date = it.groupValues[8]
             ))
         }
@@ -73,9 +77,9 @@ object Parser {
         val result = deltaPkgRe.findAll(input)
         val output = ArrayList<DeltaPackage>()
         result.forEach {
-            val versionResult = deltaPkgFilenameRe.find(it.groupValues[4])
+            val versionResult = deltaPkgFilenameRe.find(it.groupValues[4])!!
             output.add(DeltaPackage(
-                    device = versionResult!!.groupValues[2],
+                    device = it.groupValues[2],
                     model = "",
                     fileName = it.groupValues[4],
                     md5sum = it.groupValues[5],
@@ -84,13 +88,14 @@ object Parser {
                     url = "",
                     base = versionResult.groupValues[3],
                     target = versionResult.groupValues[4],
+                    type = it.groupValues[3],
                     date = it.groupValues[7]
             ))
         }
         return output
     }
 
-    fun parseDeltaPayload(input: String): PostOtaPayload {
+    fun parsePostPayload(input: String): PostOtaPayload {
         val result = deltaPayloadRe.find(input)!!
         return PostOtaPayload(
                 version = result.groupValues[1],

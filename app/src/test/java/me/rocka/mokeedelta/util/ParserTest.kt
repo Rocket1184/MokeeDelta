@@ -115,7 +115,7 @@ class ParserTest {
 
     @Test
     fun parseDeltaPayload() {
-        val payload = Parser.parseDeltaPayload(deltaPayloadHtml)
+        val payload = Parser.parsePostPayload(deltaPayloadHtml)
         assertEquals("version equals ...", "MK60.1-bacon-170413-RELEASE", payload.version)
         assertEquals("owner equals ...", "official", payload.owner)
         assertEquals("device equals ...", "bacon", payload.device)
