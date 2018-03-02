@@ -52,6 +52,11 @@ class ParserTest {
                 $('#alert-success-enabled').html('<a href="' + data + '" class="alert-link">点击下载 MK71.2-bacon-201803020045-NIGHTLY.zip</a>');
             });
         }"""
+    private val deltaPayloadHtml = """
+        <div class="card-content green tip-text-green" id="alert-success-enabled">
+          <span class="white-text">为了节约成本和资源，保障所有用户的正常下载，我们限制了完整包的下载速度。若要高速下载，请在魔趣中心捐赠我们并通过该应用下载更新。<a href="http://bbs.mokeedev.com/t/topic/25" target="_blank">查看公告</a><br/>正在准备资源，请等待 <span id="Timer">60</span> 秒或下载适用您当前版本的增量更新快速升级（不限制下载速度）。<a href="javascript:void(0); "onclick="javascript:downloadPost('/ota.php', {version:'MK60.1-bacon-170413-RELEASE', owner:'official', device:'bacon', type:'release'})">立即下载增量更新！</a></span>
+        </div>
+    """
 
     @Test
     fun parseCurrentVersion() {
@@ -106,5 +111,14 @@ class ParserTest {
         val realKey = Parser.parseRealKey(realKeyHtml)
         assertNotNull("Real key (url) not null", realKey)
         assertEquals("Real key (url) equals `ra1jrz`", "ra1jrz", realKey)
+    }
+
+    @Test
+    fun parseDeltaPayload() {
+        val payload = Parser.parseDeltaPayload(deltaPayloadHtml)
+        assertEquals("version equals ...", "MK60.1-bacon-170413-RELEASE", payload.version)
+        assertEquals("owner equals ...", "official", payload.owner)
+        assertEquals("device equals ...", "bacon", payload.device)
+        assertEquals("type equals ...", "release", payload.type)
     }
 }

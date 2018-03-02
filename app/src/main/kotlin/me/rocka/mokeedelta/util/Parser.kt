@@ -3,16 +3,14 @@
 
 package me.rocka.mokeedelta.util
 
-import me.rocka.mokeedelta.model.DeltaPackage
-import me.rocka.mokeedelta.model.Device
-import me.rocka.mokeedelta.model.FullPackage
-import me.rocka.mokeedelta.model.ReleaseChannel
+import me.rocka.mokeedelta.model.*
 
 object Parser {
 
     private val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
     private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file.php', ?\{key:'([^']+)', ?device:'([^']+)', ?type:'([^']+)', ?owner:'([^']+)?'}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^&]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
     private val deltaPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file.php', ?\{key:'([^']+)', ?device:'([^']+)', ?type:'([^']+)'}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^&]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
+    private val deltaPayloadRe = Regex("""<a href="javascript:void\(0\); "onclick="javascript:downloadPost\('/ota.php', ?\{version:'([^']+)', owner:'([^']+)', device:'([^']+)', type:'([^']+)'}\)">[^<]+</a></span>""")
     private val realKeyRe = Regex(""""?url"?: *"([^"]+)""")
     private val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-]+)-(\d+)-(\w+)""")
     private val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-]+)-(\d+)-(\d+)-(\w+)""")
@@ -90,5 +88,15 @@ object Parser {
             ))
         }
         return output
+    }
+
+    fun parseDeltaPayload(input: String): PostOtaPayload {
+        val result = deltaPayloadRe.find(input)!!
+        return PostOtaPayload(
+                version = result.groupValues[1],
+                owner = result.groupValues[2],
+                device = result.groupValues[3],
+                type = result.groupValues[4]
+        )
     }
 }
