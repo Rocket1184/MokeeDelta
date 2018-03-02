@@ -3,6 +3,7 @@
 
 package me.rocka.mokeedelta.util
 
+import me.rocka.mokeedelta.model.PostOtaPayload
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -11,9 +12,10 @@ import java.net.SocketTimeoutException
 
 object Request {
 
-    val baseURL = "https://download.mokeedev.com"
-    val downloadPHP = "$baseURL/download.php"
-    val genLinkPHP = "$baseURL/gen-link.php"
+    private const val baseURL = "https://download.mokeedev.com"
+    private const val fileURL = "$baseURL/file.php"
+    private const val linkURL = "$baseURL/gen-link.php"
+    private const val otaURL = "$baseURL/ota.php"
     private val client = OkHttpClient()
             .newBuilder()
             .cookieJar(SimpleCookieJar())
@@ -37,13 +39,13 @@ object Request {
         return null
     }
 
-    fun postKey(key: String): String? {
+    fun postFile(key: String): String? {
         val postBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("key", key)
                 .build()
         val req = Request.Builder()
-                .url(downloadPHP)
+                .url(fileURL)
                 .post(postBody)
                 .build()
         try {
@@ -57,13 +59,36 @@ object Request {
         return null
     }
 
-    fun postUrl(url: String): String? {
+    fun postLink(url: String): String? {
         val postBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("url", url)
                 .build()
         val req = Request.Builder()
-                .url(genLinkPHP)
+                .url(linkURL)
+                .post(postBody)
+                .build()
+        try {
+            val res = client.newCall(req).execute()
+            return res.body()!!.string()
+        } catch (e: SocketTimeoutException) {
+
+        } catch (e: IOException) {
+
+        }
+        return null
+    }
+
+    fun postOta(params: PostOtaPayload): String? {
+        val postBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("version", params.version)
+                .addFormDataPart("owner", params.owner)
+                .addFormDataPart("device", params.device)
+                .addFormDataPart("type", params.type)
+                .build()
+        val req = Request.Builder()
+                .url(otaURL)
                 .post(postBody)
                 .build()
         try {
