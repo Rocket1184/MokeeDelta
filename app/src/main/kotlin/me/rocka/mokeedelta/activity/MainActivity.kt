@@ -17,6 +17,7 @@ import me.rocka.mokeedelta.adapter.RomPackageAdapter
 import me.rocka.mokeedelta.databinding.ActivityMainBinding
 import me.rocka.mokeedelta.model.DeltaPackage
 import me.rocka.mokeedelta.model.IRomPackage
+import me.rocka.mokeedelta.model.PostFilePayload
 import me.rocka.mokeedelta.util.BuildProp
 import me.rocka.mokeedelta.util.Parser
 import me.rocka.mokeedelta.util.Request
@@ -31,10 +32,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pkgListView: RecyclerView
     private lateinit var progressBar: ProgressBar
 
-    private val handleDownload = { e: IRomPackage ->
-        val downloadPageHtml = Request.postKey(e.key)
+    private val handleDownload = { pkg: IRomPackage ->
+        val payload = PostFilePayload(
+                key = pkg.key,
+                device = pkg.device,
+                type = pkg.type,
+                owner = pkg.owner
+        )
+        val downloadPageHtml = Request.postFile(payload)
         val realKey = Parser.parseRealKey(downloadPageHtml ?: "")
-        val url = Request.postUrl(realKey ?: "")
+        val url = Request.postLink(realKey ?: "")
         val uri = Uri.parse(url)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
@@ -42,14 +49,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshPackages() = doAsync {
         uiThread { setPkgListVisible(false) }
+        // Step1: goto https://download.mokeedev.com/?device=$device
         val html = Request.get(Request.deviceLink(binding.currentPkg!!.device))
         val pkgList = Parser.parseFullPkg(html!!)
         val deltaList = ArrayList<DeltaPackage>()
         pkgList.filter { it.version.toLong() > binding.currentPkg!!.version.toLong() }
                 .forEach {
-                    val tmpHtml = Request.get(it.deltaUrl)
-                    val tmpList = Parser.parseDeltaPkg(tmpHtml!!)
-                    tmpList.findLast { it.base == binding.currentPkg!!.version }
+                    // Step2: click one package
+                    // goto https://download.mokeedev.com/file.php
+                    val payload1 = PostFilePayload(
+                            key = it.key,
+                            device = it.device,
+                            type = it.type,
+                            owner = it.owner
+                    )
+                    val html1 = Request.postFile(payload1)!!
+                    val otaParam = Parser.parsePostPayload(html1)
+                    // Step3: click `立即下载增量更新！`
+                    val html2 = Request.postOta(otaParam)!!
+                    Parser.parseDeltaPkg(html2)
+                            .findLast { it.base == binding.currentPkg!!.version }
                             ?.let { deltaList.add(it) }
                     deltaList.sortByDescending { it.target.toLong() }
                     uiThread { pkgListView.adapter = RomPackageAdapter(deltaList, handleDownload) }
@@ -72,8 +91,8 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)!!
         binding.currentPkg = Parser.parseCurrentVersion(BuildProp.get("ro.mk.version")!!)
         setSupportActionBar(toolbar)
-        pkgListView = find<RecyclerView>(R.id.main_package_list)
-        progressBar = find<ProgressBar>(R.id.main_progress_bar)
+        pkgListView = find(R.id.main_package_list)
+        progressBar = find(R.id.main_progress_bar)
         fab.setOnClickListener { refreshPackages() }
         refreshPackages()
     }
