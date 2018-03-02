@@ -4,21 +4,18 @@
 package me.rocka.mokeedelta.model
 
 data class FullPackage(
-        // Build.DEVICE
-        val device: String,
-        // Build.MODEL
+        override val device: String,
         override val model: String,
-        val fileName: String,
-        val md5sum: String,
         override val size: String,
-        val url: String,
+        override val key: String,
+        override val type: String,
+        override val date: String,
+        override val owner: String,
+        override val md5sum: String,
+        override val fileName: String,
         val version: String,
         val deltaUrl: String,
-        override val key: String,
-        val channel: ReleaseChannel,
-        val owner: String,
-        override val type: String,
-        override val date: String
+        val channel: ReleaseChannel
 ) : IRomPackage {
     override val name: String
         get() = "$version-$channel"

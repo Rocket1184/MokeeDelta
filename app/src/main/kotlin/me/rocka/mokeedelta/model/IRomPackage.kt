@@ -4,10 +4,16 @@
 package me.rocka.mokeedelta.model
 
 interface IRomPackage {
+    // Build.DEVICE
+    val device: String
+    // Build.MODEL
     val model: String
     val name: String
     val size: String
     val key: String
     val type: String
     val date: String
+    val owner: String
+    val md5sum: String
+    val fileName: String
 }

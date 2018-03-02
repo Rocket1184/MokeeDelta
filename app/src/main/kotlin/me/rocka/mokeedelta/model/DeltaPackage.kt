@@ -4,19 +4,17 @@
 package me.rocka.mokeedelta.model
 
 data class DeltaPackage(
-        // Build.DEVICE
-        val device: String,
-        // Build.MODEL
+        override val device: String,
         override val model: String,
-        val fileName: String,
-        val md5sum: String,
         override val size: String,
-        val url: String,
-        val base: String,
-        val target: String,
         override val key: String,
         override val type: String,
-        override val date: String
+        override val date: String,
+        override val owner: String,
+        override val md5sum: String,
+        override val fileName: String,
+        val base: String,
+        val target: String
 ) : IRomPackage {
     override val name: String
         get() = target
