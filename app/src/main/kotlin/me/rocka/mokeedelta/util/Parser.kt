@@ -10,10 +10,9 @@ import me.rocka.mokeedelta.model.ReleaseChannel
 
 object Parser {
 
-    val deltaRoot = "https://download.mokeedev.com/"
     private val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
-    private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a?><br ?/><small>md5sum: ([^&]+)&nbsp;<a href="javascript:void\(0\);" onclick="location.href='([^"]+)'">[^<]+</a></small></td>[^<]+<td>([^<]+)</td>""")
-    private val deltaPkgRe = Regex("""<tr>[^<]+<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('download.php', ?\{key:'([^']+)'[^>]+>([^<]+)</a><br/><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>""")
+    private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file.php', ?\{key:'([^']+)', ?device:'([^']+)', ?type:'([^']+)', ?owner:'([^']+)?'}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^&]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
+    private val deltaPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file.php', ?\{key:'([^']+)', ?device:'([^']+)', ?type:'([^']+)'}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^&]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
     private val realKeyRe = Regex(""""?url"?: *"([^"]+)""")
     private val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-]+)-(\d+)-(\w+)""")
     private val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-]+)-(\d+)-(\d+)-(\w+)""")
@@ -44,7 +43,9 @@ object Parser {
                 version = result?.groupValues?.get(3) ?: "",
                 size = "",
                 url = "",
-                channel = ReleaseChannel.valueOf(result?.groupValues?.get(4) ?: ReleaseChannel.UNKNOWN.toString())
+                channel = ReleaseChannel.valueOf(result?.groupValues?.get(4)
+                        ?: ReleaseChannel.UNKNOWN.toString()),
+                date = ""
         )
     }
 
@@ -52,18 +53,19 @@ object Parser {
         val result = fullPkgRe.findAll(input)
         val output = ArrayList<FullPackage>()
         result.forEach {
-            val versionResult = fullPkgFilenameRe.find(it.groupValues[2])
+            val versionResult = fullPkgFilenameRe.find(it.groupValues[5])
             output.add(FullPackage(
                     device = versionResult!!.groupValues[2],
                     model = "",
-                    fileName = it.groupValues[2],
-                    md5sum = it.groupValues[3],
-                    deltaUrl = "$deltaRoot${it.groupValues[4]}",
+                    fileName = it.groupValues[5],
+                    md5sum = it.groupValues[6],
+                    deltaUrl = "",
                     key = it.groupValues[1],
                     version = versionResult.groupValues[3],
-                    size = it.groupValues[5],
+                    size = it.groupValues[7],
                     url = "",
-                    channel = ReleaseChannel.valueOf(versionResult.groupValues[4])
+                    channel = ReleaseChannel.valueOf(versionResult.groupValues[4]),
+                    date = it.groupValues[8]
             ))
         }
         return output
@@ -73,17 +75,18 @@ object Parser {
         val result = deltaPkgRe.findAll(input)
         val output = ArrayList<DeltaPackage>()
         result.forEach {
-            val versionResult = deltaPkgFilenameRe.find(it.groupValues[2])
+            val versionResult = deltaPkgFilenameRe.find(it.groupValues[4])
             output.add(DeltaPackage(
                     device = versionResult!!.groupValues[2],
                     model = "",
-                    fileName = it.groupValues[2],
-                    md5sum = it.groupValues[3],
+                    fileName = it.groupValues[4],
+                    md5sum = it.groupValues[5],
                     key = it.groupValues[1],
-                    size = it.groupValues[4],
+                    size = it.groupValues[6],
                     url = "",
                     base = versionResult.groupValues[3],
-                    target = versionResult.groupValues[4]
+                    target = versionResult.groupValues[4],
+                    date = it.groupValues[7]
             ))
         }
         return output
