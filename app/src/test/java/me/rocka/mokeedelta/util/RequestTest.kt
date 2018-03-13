@@ -24,7 +24,7 @@ class RequestTest {
         // key for `MK51.1-bacon-160420-HISTORY.zip`
         // <td><a href="javascript:void(0);" onclick="javascript:downloadPost('/file.php', {key:'d18c913d0a26c2abaef111b2cdbf5289', device:'bacon', type:'history', owner:''})" id="tdurl">MK51.1-bacon-160420-HISTORY.zip</a><br/><small>md5sum: 9a51de8041bccccdfb7f7af61f6024dd</small></td>
         val payload = PostFilePayload(
-                key = "d18c913d0a26c2abaef111b2cdbf5289",
+                key = "c99deee4d8d6b1303684ad5375436692",
                 device = "bacon",
                 type = "history",
                 owner = ""
