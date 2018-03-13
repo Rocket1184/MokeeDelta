@@ -10,7 +10,7 @@ object Parser {
     private val deviceRe = Regex("""<li id="device_([^"]+)">[^<]+[^>]+><span>([^ ]+)[^<]+</span></a>""")
     private val fullPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file\.php', ?\{key:'([^']+)', ?device:'([^']+)?', ?type:'([^']+)?', ?owner:'([^']+)?'\}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
     private val deltaPkgRe = Regex("""<td><a href="javascript:void\(0\);" onclick="javascript:downloadPost\('/file\.php', ?\{key:'([^']+)', ?device:'([^']+)?', ?type:'([^']+)?'\}\)" id="tdurl">([^<]+)</a><br ?/?><small>md5sum: ([^<]+)</small></td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>""")
-    private val deltaPayloadRe = Regex("""<a href="javascript:void\(0\); "onclick="javascript:downloadPost\('/ota\.php', ?\{version:'([^']+)', owner:'([^']+)?', device:'([^']+)?', type:'([^']+)?'\}\)">[^<]+</a></span>""")
+    private val deltaPayloadRe = Regex("""<a href="javascript:void\(0\); "onclick="javascript:downloadPost\('/ota\.php', ?\{version:'([^']+)', owner:'([^']+)?', device:'([^']+)?', type:'([^']+)?'\}\)">[^<]+</a>""")
     private val realKeyRe = Regex(""""?url"?: *"([^"]+)""")
     private val fullPkgFilenameRe = Regex("""(MK\d+\.\d+)-([^-]+)-(\d+)-(\w+)""")
     private val deltaPkgFilenameRe = Regex("""OTA-(MK\d+\.\d+)-([^-]+)-(\d+)-(\d+)-(\w+)""")
