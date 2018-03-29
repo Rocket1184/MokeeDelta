@@ -44,9 +44,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation "org.jetbrains.anko:anko:0.10.1"
 
-    // Data Binding
-    kapt "com.android.databinding:compiler:$android_plugin_version"
-
     // Third-Party
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 
