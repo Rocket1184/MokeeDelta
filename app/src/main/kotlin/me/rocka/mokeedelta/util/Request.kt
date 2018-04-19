@@ -63,10 +63,10 @@ object Request {
         return null
     }
 
-    fun postLink(url: String): String? {
+    fun postLink(key: String): String? {
         val postBody = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("url", url)
+                .addFormDataPart("key", key)
                 .build()
         val req = Request.Builder()
                 .url(linkURL)
