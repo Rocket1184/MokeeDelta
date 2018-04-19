@@ -21,10 +21,7 @@ import me.rocka.mokeedelta.model.PostFilePayload
 import me.rocka.mokeedelta.util.BuildProp
 import me.rocka.mokeedelta.util.Parser
 import me.rocka.mokeedelta.util.Request
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.find
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,6 +38,9 @@ class MainActivity : AppCompatActivity() {
         )
         val downloadPageHtml = Request.postFile(payload)
         val realKey = Parser.parseRealKey(downloadPageHtml ?: "")
+        // TODO: show a more friendly timer, or try to decrease waiting time
+        runOnUiThread { toast(R.string.wait_hint) }
+        Thread.sleep(60 * 1000)
         val url = Request.postLink(realKey ?: "")
         val uri = Uri.parse(url)
         val intent = Intent(Intent.ACTION_VIEW, uri)

@@ -6,4 +6,5 @@
     <string name="device_code_name">Device Code Name</string>
     <string name="current_system_version">Current System Version</string>
     <string name="available_packages">Available Packages</string>
+    <string name="wait_hint">Please be patient, we must wait 60 seconds. :(</string>
 </resources>
