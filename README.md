@@ -4,7 +4,7 @@ Don't wait do download Mokee delta (or OTA) packages!
 
 ## Screenshot
 
-<img src="https://user-images.githubusercontent.com/13914967/29304688-ef6afae6-8159-11e7-999d-ac5c79cdb235.png" style="width:300px;max-width:100%;">
+<img src="https://user-images.githubusercontent.com/13914967/29304688-ef6afae6-8159-11e7-999d-ac5c79cdb235.png" width="300px" style="max-width:100%;">
 
 ## Feature
 
@@ -12,9 +12,14 @@ Don't wait do download Mokee delta (or OTA) packages!
 
 ## Latest Release
 
- [0.3.4 Hotfix-4](https://github.com/Rocket1184/MokeeDelta/releases/tag/0.3.4)
+[0.3.5 Coldfix-5](https://github.com/Rocket1184/MokeeDelta/releases/tag/0.3.5)
 
 ### ChangeLog
+
+#### 0.3.5
+
+- fix delta package fetching issues due to Mokee website changes
+- we must wait 60s before we can get real download link now
 
 #### 0.3.4
 
