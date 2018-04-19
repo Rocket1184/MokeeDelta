@@ -46,10 +46,10 @@ class ParserTest {
         function genLink() {
             $.post("/gen-link.php",
             {
-                url:"ra1jrz"
+                key:"4f8c65b25f26d3775a08fe7aa5eb711a"
             },
             function(data, status) {
-                $('#alert-success-enabled').html('<a href="' + data + '" class="alert-link">点击下载 MK71.2-bacon-201803020045-NIGHTLY.zip</a>');
+                $('#5c9ee7695d255718dcdfaf9dd27bc66e').html('<a href="' + data + '" class="alert-link">点击下载 OTA-MK60.1-bacon-170408-170413-RELEASE.zip</a>');
             });
         }"""
     private val deltaPayloadHtml = """
@@ -109,8 +109,8 @@ class ParserTest {
     @Test
     fun parseRealKey() {
         val realKey = Parser.parseRealKey(realKeyHtml)
-        assertNotNull("Real key (url) not null", realKey)
-        assertEquals("Real key (url) equals `ra1jrz`", "ra1jrz", realKey)
+        assertNotNull("Real key not null", realKey)
+        assertEquals("Real key equals ...", "4f8c65b25f26d3775a08fe7aa5eb711a", realKey)
     }
 
     @Test
